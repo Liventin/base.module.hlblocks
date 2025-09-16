@@ -10,4 +10,5 @@ interface HlBlocksEntity
     public function __construct(array $entityData);
     public function getQuery(): Query;
     public function getEntityCodeByUf(): string;
+    public function getDataManagerClass(): string;
 }

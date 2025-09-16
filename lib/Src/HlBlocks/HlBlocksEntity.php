@@ -3,12 +3,12 @@
 namespace Base\Module\Src\HlBlocks;
 
 
+use Base\Module\Exception\ModuleException;
 use Base\Module\Service\HlBlocks\HlBlocksEntity as IHlBlocksEntity;
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Entity\Base;
 use Bitrix\Main\ORM\Query\Query;
-use Bitrix\Main\SystemException;
+use Exception;
 
 class HlBlocksEntity implements IHlBlocksEntity
 {
@@ -19,17 +19,22 @@ class HlBlocksEntity implements IHlBlocksEntity
     }
 
     /**
-     * @throws SystemException
-     * @throws ArgumentException
+     * @return Query
+     * @throws ModuleException
      */
     public function getQuery(): Query
     {
         $this->prepareEntity();
-        return new Query($this->entity);
+        try {
+            return new Query($this->entity);
+        } catch (Exception $e) {
+            throw new ModuleException($e->getMessage());
+        }
     }
 
     /**
-     * @throws SystemException
+     * @return void
+     * @throws ModuleException
      */
     private function prepareEntity(): void
     {
@@ -37,7 +42,11 @@ class HlBlocksEntity implements IHlBlocksEntity
             return;
         }
 
-        $this->entity = HighloadBlockTable::compileEntity($this->entityData);
+        try {
+            $this->entity = HighloadBlockTable::compileEntity($this->entityData);
+        } catch (Exception $e) {
+            throw new ModuleException($e->getMessage());
+        }
     }
 
     /**
@@ -46,5 +55,20 @@ class HlBlocksEntity implements IHlBlocksEntity
     public function getEntityCodeByUf(): string
     {
         return 'HLBLOCK_'.$this->entityData['ID'];
+    }
+
+    /**
+     * @return string
+     * @throws ModuleException
+     */
+    public function getDataManagerClass(): string
+    {
+        $this->prepareEntity();
+
+        try {
+            return $this->entity->getDataClass();
+        } catch (Exception $e) {
+            throw new ModuleException($e->getMessage());
+        }
     }
 }
