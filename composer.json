@@ -1,0 +1,14 @@
+{
+  "name": "liventin/base.module.hlblocks",
+  "type": "bitrix-d7-module",
+  "description": "Service for work with hl blocks",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.1",
+    "liventin/base.module": "^1.0.0",
+    "liventin/base.module.handlers": "^1.0.0"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  }
+}
